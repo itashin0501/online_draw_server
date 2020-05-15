@@ -25,7 +25,7 @@ module.exports = {
       ssh_options: ['StrictHostKeyChecking=no', 'PasswordAuthentication=no'],
       path: process.env.DEPLOY_TO,
       'post-setup': 'npm install',
-      'post-deploy': 'pm2 restart ~/online-draw/online-draw.conf.yml --env production',
+      'post-deploy': 'pm2 restart ~/online-draw/ecosystem.config.js --env production',
     },
   },
 };
