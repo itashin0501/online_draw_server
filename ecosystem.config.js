@@ -3,7 +3,7 @@ const keyPath = process.env.SSH_PRIVATE_KEY_PATH || '~/.ssh/id_rsa';
 module.exports = {
   apps: [
     {
-      name: 'web-draw',
+      name: 'onlineDraw',
       script: 'app.js',
       args: 'start',
       env: {
@@ -25,7 +25,7 @@ module.exports = {
       ssh_options: ['StrictHostKeyChecking=no', 'PasswordAuthentication=no'],
       path: process.env.DEPLOY_TO,
       'post-setup': 'npm install',
-      'post-deploy': 'pm2 restart ~/online-draw/ecosystem.config.js --env production',
+      'post-deploy': 'pm2 restart ~/online-draw/online-draw.conf.yml --env production',
     },
   },
 };
