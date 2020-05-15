@@ -1,0 +1,22 @@
+{
+  "name": "online_draw_server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/itashin0501/online_draw_server.git"
+  },
+  "author": "itamoto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/itashin0501/online_draw_server/issues"
+  },
+  "homepage": "https://github.com/itashin0501/online_draw_server#readme",
+  "dependencies": {
+    "socket.io": "^2.3.0"
+  }
+}
