@@ -8,9 +8,8 @@ function handler(req, res) {
 }
 
 io.sockets.on('connection', function (socket) {
-  socket.on('clear send', function (msg) {
-    socket.broadcast.emit('clear user');
-    console.log('disconnect:' + msg.user);
+  socket.on('add user', function (msg) {
+    socket.broadcast.emit('add user', msg);
   });
 
   socket.on('server send', function (msg) {
@@ -19,6 +18,5 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('disconnect', function () {
     io.sockets.emit('user disconnected');
-    console.log('disconnect');
   });
 });
