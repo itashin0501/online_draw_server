@@ -7,9 +7,17 @@ function handler(req, res) {
   res.end('<h1>Hello online draw</h1>');
 }
 
+// ユーザ管理ハッシュ
+const userHash = {};
+
 io.sockets.on('connection', function (socket) {
-  socket.on('add user', function (msg) {
-    socket.broadcast.emit('add user', msg);
+  // TODO room
+  // socket.join(roomName);
+  // socket.broadcast.emit('user connected', socket.id);
+
+  socket.on('add user', function (user) {
+    userHash[socket.id] = user;
+    socket.broadcast.emit('add user', user);
   });
 
   socket.on('server send', function (msg) {
@@ -17,6 +25,6 @@ io.sockets.on('connection', function (socket) {
   });
 
   socket.on('disconnect', function () {
-    io.sockets.emit('user disconnected');
+    io.sockets.emit('user disconnected', userHash[socket.id]);
   });
 });
