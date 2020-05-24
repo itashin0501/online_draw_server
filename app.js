@@ -10,21 +10,45 @@ function handler(req, res) {
 // ユーザ管理ハッシュ
 const userHash = {};
 
-io.sockets.on('connection', function (socket) {
-  // TODO room
-  // socket.join(roomName);
-  // socket.broadcast.emit('user connected', socket.id);
+const nsp_draw = io.of('/nsp_draw');
 
-  socket.on('add user', function (user) {
-    userHash[socket.id] = user;
-    socket.broadcast.emit('add user', user);
+const drawSocket = nsp_draw.on('connection', function (socket) {
+  socket.on('join room', function (roomName) {
+    console.log('join room: ' + roomName);
+    socket.join(roomName);
+  });
+
+  socket.on('add user', function (data) {
+    userHash[socket.id] = data.user;
+    // socket.broadcast.emit('add user', user);
+    socket.broadcast.to(data.room).emit('add user', data.user);
   });
 
   socket.on('server send', function (msg) {
-    socket.broadcast.emit('send user', msg);
+    // socket.broadcast.emit('send user', msg);
+    socket.broadcast.to(msg.room).emit('send user', msg.data);
   });
 
   socket.on('disconnect', function () {
-    io.sockets.emit('user disconnected', userHash[socket.id]);
+    socket.broadcast.emit('user disconnected', userHash[socket.id]);
+    // drawSocket.to(data.room).emit('user disconnected', userHash[socket.id]);
+  });
+});
+
+const nsp_chat = io.of('/nsp_chat');
+
+const chatSocket = nsp_chat.on('connection', function (socket) {
+  socket.on('join room', function (roomName) {
+    console.log('join room: ' + roomName);
+    socket.join(roomName);
+  });
+
+  socket.on('add user', function (data) {
+    userHash[socket.id] = data.user;
+    socket.broadcast.to(data.room).emit('add user', data.user);
+  });
+
+  socket.on('disconnect', function () {
+    socket.broadcast.emit('user disconnected', userHash[socket.id]);
   });
 });
