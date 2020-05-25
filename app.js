@@ -39,13 +39,32 @@ const nsp_chat = io.of('/nsp_chat');
 
 const chatSocket = nsp_chat.on('connection', function (socket) {
   socket.on('join room', function (roomName) {
-    console.log('join room: ' + roomName);
+    // console.log('join room: ' + roomName);
     socket.join(roomName);
+  });
+
+  socket.on('get room users', function (roomName) {
+    nsp_chat.in(roomName).clients((error, clients) => {
+      const users = [];
+      clients.forEach((c) => {
+        users.push(userHash[c]);
+      });
+      chatSocket.to(socket.id).emit('get room users', users);
+    });
   });
 
   socket.on('add user', function (data) {
     userHash[socket.id] = data.user;
     socket.broadcast.to(data.room).emit('add user', data.user);
+  });
+
+  socket.on('direct message', function (data) {
+    for (const key in userHash) {
+      if (userHash[key].id == data.toUserId) {
+        chatSocket.to(key).emit('direct message', { message: data.message, from: userHash[socket.id] });
+        return;
+      }
+    }
   });
 
   socket.on('disconnect', function () {
