@@ -24,6 +24,13 @@ const drawSocket = nsp_draw.on('connection', function (socket) {
     socket.broadcast.to(data.room).emit('add user', data.user);
   });
 
+  socket.on('paste tag', function (msg) {
+    socket.broadcast.to(msg.room).emit('paste tag', msg.data);
+  });
+  socket.on('move tag', function (msg) {
+    socket.broadcast.to(msg.room).emit('move tag', msg.data);
+  });
+
   socket.on('server send', function (msg) {
     // socket.broadcast.emit('send user', msg);
     socket.broadcast.to(msg.room).emit('send user', msg.data);
